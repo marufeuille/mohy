@@ -1,5 +1,5 @@
 from typing import List
-from mohy.entities import Question
+from mohy.entities import Question, User
 from flask import Flask, request, jsonify
 from mohy.user_services import UserApplicationService
 
@@ -8,21 +8,26 @@ app = Flask(__name__)
 app_service = UserApplicationService()
 
 
-@app.route("/question", methods=["POST"])
-def create_question():
-    data = request.json
-    print(data)
+def list_question():
+    questions: List[Question] = app_service.list_question()
+    print(questions)
+    return jsonify([{
+        "question_id": q.question_id.question_id,
+        "question_type": q.question_type.value,
+        "text": q.text} for q in questions.values()]), 200
+
+
+def create_question(question_text: str, question_type: str, user_name: str):
     try:
-        app_service.create_question(
-            question_text=data["question"], question_type=data["question_type"], create_user_name=data["user_name"])
+        question_id = app_service.create_question(
+            question_text=question_text, question_type=question_type, create_user_name=user_name)
     except Exception as e:
         print("error")
         print(e)
         return "Error", 500
-    return "Success", 200
+    return f"Created {question_id.question_id}", 200
 
 
-@app.route("/question/<question_id>", methods=["GET"])
 def describe_question(question_id):
     try:
         question = app_service.describe_question(question_id)
@@ -33,7 +38,7 @@ def describe_question(question_id):
             "question_id": question.question_id.question_id,
             "question_type": question.question_type.value,
             "create_user": question.create_user.name,
-            "text": question.text,
+            "question_text": question.text,
             "valid_choice": ", ".join(question.valid_choice),
             "created_at": question.created_at.strftime("%Y-%m-%d %H:%M:%S"),
             "last_modified_at": question.last_modified_at.strftime("%Y-%m-%d %H:%M:%S"),
@@ -42,34 +47,62 @@ def describe_question(question_id):
     ), 200
 
 
-@app.route("/questions", methods=["GET"])
-def list_question():
-    questions: List[Question] = app_service.list_question()
-    print(questions)
+def list_execution():
+    executions: List[Question] = app_service.list_execution().copy()
+    print(executions)
     return jsonify([{
-        "question_id": q.question_id.question_id,
-        "question_type": q.question_type.value,
-        "text": q.text} for q in questions.values()]), 200
+        "execution_id": e.execution_id.execution_id,
+        "question": e.question.text
+    } for e in executions.values()]), 200
 
 
-@app.route("/execution", methods=["POST"])
-def create_execution():
-    data = request.json
+def create_execution(question_id: str, user_name: str):
     try:
-        app_service.create_execution(data["question_id"], data["user_name"])
+        execution_id = app_service.create_execution(question_id, user_name)
     except Exception:
         return "Error", 500
-    return "Success", 200
+    return f"Created {execution_id.execution_id}", 200
 
 
-@app.route("/answer", methods=["POST"])
-def answer_question():
-    data = request.json
+def answer_question(execution_id: str, answer: str, user_name: str):
     try:
-        app_service.answer_question(data["execution_id"], data["answer"], data["user_name"])
+        answer_id = app_service.answer_question(execution_id, answer, user_name)
     except Exception:
         return "Error", 500
-    return "Success", 200
+    return f"Created {answer_id.answer_id}", 200
+
+
+@app.route("/slack_command", methods=["POST"])
+def call_commands():
+    data = request.form
+    print(data)
+    user_name = data.get("user_name")
+    user_id = data.get("user_id")
+    text = data.get("text").split(" ")
+    if text[0] == "questions":
+        if text[1] == "list":
+            return list_question()
+    elif text[0] == "question":
+        if text[1] == "create":
+            question_text = text[2]
+            question_type = text[3] if len(text) > 3 else "FREE_TEXT"
+            return create_question(question_text, question_type, user_name)
+        elif text[1] == "describe":
+            question_id = text[2]
+            return describe_question(question_id)
+
+    elif text[0] == "execution":
+        if text[1] == "create":
+            question_id = text[2]
+            return create_execution(question_id, user_name)
+        elif text[1] == "answer":
+            execution_id = text[2]
+            answer = text[3]
+            return answer_question(execution_id, answer, user_name)
+
+    elif text[0] == "executions":
+        if text[1] == "list":
+            return list_execution()
 
 
 if __name__ == "__main__":

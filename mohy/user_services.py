@@ -33,17 +33,19 @@ class UserApplicationService:
 
     def answer_question(self, execution_id_str: str, answer_text: str, answering_user_name: str) -> AnswerId:
         execution_id = ExecutionId(execution_id_str)
-        self.execution_repository.find(execution_id=execution_id)
         user = User(user_id=self.user_repository.generate_new_user_id(), name=answering_user_name)
-        self.user_repository.save(user)
         answer = Answer(text=answer_text, answering_user=user,
                         answer_id=self.answer_repository.generate_new_answer_id())
-        self.execution_repository.add_answer(answer)
-        self.answer_repository.save(execution_id, answer)
+        self.execution_repository.add_answer(execution_id, answer)
+        self.user_repository.save(user)
+        self.answer_repository.save(answer)
         return answer.answer_id
 
     def list_question(self) -> List[Question]:
         return self.question_repository.questions.copy()
+
+    def list_execution(self) -> List[Question]:
+        return self.execution_repository.executions.copy()
 
     def describe_question(self, question_id_str: str) -> Question:
         question_id = QuestionId(question_id_str)

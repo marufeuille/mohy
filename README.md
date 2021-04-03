@@ -4,7 +4,7 @@
 curl localhost/questions
 ```
 
-## Get Question Describe
+## Descrive Question
 ```
 curl localhost/question/QUESTION_ID
 ```
@@ -15,4 +15,6 @@ curl -X POST -H "Content-Type: application/json" -d '{"question":"Hello?", "ques
 ```
 
 ## Answer Question
+```
 curl -X POST -H "Content-Type: application/json" -d '{"question_id":"HTRcwNxsdWjb1lnlRatF", "answer": "hi!", "user_name":"UserB"}' localhost/execution
+```

@@ -205,7 +205,7 @@ class OnMemoryExecutionRepository(AbstractExecutionRepository):
     def add_answer(self, execution_id: ExecutionId, answer: Answer):
         if execution_id not in self.executions.keys():
             raise KeyError(f"execution id {execution_id} not found")
-        self.executions[execution_id].add_answer(answer)
+        self.executions[execution_id].answer_question(answer)
 
     def generate_new_execution_id(self, n: int = 20) -> ExecutionId:
         while True:
