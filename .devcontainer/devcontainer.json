@@ -35,10 +35,10 @@
 	"runArgs": ["--init", "--privileged"], //"--cap-add=SYS_PTRACE", "--security-opt", "seccomp=unconfined" ],
 
 	// Uncomment to use the Docker CLI from inside the container. See https://aka.ms/vscode-remote/samples/docker-from-docker.
-	//"mounts": [
+	"mounts": [
 //		"source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind",
-//		"source=${localEnv:HOME}/.ssh,target=/root/.ssh,type=bind"
-//	],
+		"source=${localEnv:HOME}/.ssh,target=/root/.ssh,type=bind"
+	],
 //
 //	"remoteEnv": { "LOCAL_WORKSPACE_FOLDER": "${localWorkspaceFolder}" }
 
