@@ -72,6 +72,20 @@ def answer_question(execution_id: str, answer: str, user_name: str):
     return f"Created {answer_id.answer_id}", 200
 
 
+def describe_execution(execution_id: str):
+    try:
+        execution = app_service.describe_execution(execution_id)
+    except Exception:
+        return "Error", 500
+    return jsonify(
+        {
+            "execution_id": execution.execution_id.execution_id,
+            "question": execution.question.text,
+            "answers": [[ans.text, ans.answering_user] for ans in execution.answers]
+        }
+    ), 200
+
+
 @app.route("/slack_command", methods=["POST"])
 def call_commands():
     data = request.form
@@ -99,6 +113,9 @@ def call_commands():
             execution_id = text[2]
             answer = text[3]
             return answer_question(execution_id, answer, user_name)
+        elif text[1] == "describe":
+            execution_id = text[2]
+            return describe_execution(execution_id, user_name)
 
     elif text[0] == "executions":
         if text[1] == "list":

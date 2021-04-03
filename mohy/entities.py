@@ -141,4 +141,4 @@ class Execution:
             if answer not in self.question.valid_choice:
                 raise ValueError(f"invalid answer {answer} to this question")
 
-            self.answers.append(answer)
+        self.answers.append(answer)

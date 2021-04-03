@@ -50,3 +50,7 @@ class UserApplicationService:
     def describe_question(self, question_id_str: str) -> Question:
         question_id = QuestionId(question_id_str)
         return self.question_repository.find(question_id).copy()
+
+    def describe_execution(self, execution_id_str: str) -> Execution:
+        execution_id = ExecutionId(execution_id_str)
+        return self.execution_repository.find(execution_id).copy()
