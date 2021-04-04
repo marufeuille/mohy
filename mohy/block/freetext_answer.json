@@ -1,42 +1,10 @@
-{
-	"type": "modal",
-	"title": {
-		"type": "plain_text",
-		"text": "アンケート(自由入力)",
-		"emoji": true
-	},
-	"submit": {
-		"type": "plain_text",
-		"text": "Submit",
-		"emoji": true
-	},
-	"close": {
-		"type": "plain_text",
-		"text": "Cancel",
-		"emoji": true
-	},
-	"blocks": [
-		{
-			"type": "section",
-			"block_id": "question_sentence",
-			"text": {
-				"type": "mrkdwn",
-				"text": "*質問*: xxxx"
-			}
-		},
-		{
-			"type": "input",
-			"block_id": "answer",
-			"element": {
-				"type": "plain_text_input",
-				"multiline": true,
-				"action_id": "answer-action"
-			},
-			"label": {
-				"type": "plain_text",
-				"text": "質問の解答を入力してください",
-				"emoji": true
-			}
-		}
-	]
-}
+[
+    {
+        "type": "section",
+        "block_id": "question_sentence",
+        "text": {
+            "type": "mrkdwn",
+            "text": "*質問*: xxxx"
+        }
+    }
+]

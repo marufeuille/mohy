@@ -94,16 +94,17 @@ def handle_create_execution(ack, body, client, view):
     ack()
     msg = ""
     try:
-        question_id = app_service.get_question(question_id)
+        question = app_service.get_question(question_id)
     except Exception as e:
         msg = "There was an error with your submission"
     finally:
         with open("mohy/block/freetext_answer.json") as f:
-            view_ans = json.loads(f.read())
+            blocks = json.loads(f.read())
+        blocks[0]["text"]["text"] = f"*質問*: {question.text}"
 
         for channel_id in channel_ids:
             print(channel_id)
-            client.chat_postMessage(channel=channel_id, view=view_ans, text="test")
+            client.chat_postMessage(channel=channel_id, blocks=blocks, text="test")
 
 
 if __name__ == "__main__":
