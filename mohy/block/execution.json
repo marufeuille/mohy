@@ -1,0 +1,65 @@
+{
+	"type": "modal",
+	"callback_id": "create_execution",
+	"title": {
+		"type": "plain_text",
+		"text": "アンケートの実施",
+		"emoji": true
+	},
+	"submit": {
+		"type": "plain_text",
+		"text": "実施する",
+		"emoji": true
+	},
+	"close": {
+		"type": "plain_text",
+		"text": "閉じる",
+		"emoji": true
+	},
+	"blocks": [
+		{
+			"type": "section",
+			"block_id": "select_question",
+			"text": {
+				"type": "mrkdwn",
+				"text": "アンケートを選択"
+			},
+			"accessory": {
+				"type": "static_select",
+				"placeholder": {
+					"type": "plain_text",
+					"text": "Select an item",
+					"emoji": true
+				},
+				"options": [
+					{
+						"text": {
+							"type": "plain_text",
+							"text": "*this is plain_text text*",
+							"emoji": true
+						},
+						"value": "value-0"
+					}
+				],
+				"action_id": "select_question-action"
+			}
+		},
+		{
+			"type": "section",
+			"block_id": "select_channel",
+			"text": {
+				"type": "mrkdwn",
+				"text": "アンケートを実施したいチャンネルを選択してください"
+			},
+			"accessory": {
+				"type": "multi_conversations_select",
+				"placeholder": {
+					"type": "plain_text",
+					"text": "Select conversations",
+					"emoji": true
+				},
+				"action_id": "select_channel-action"
+			}
+		}
+	]
+}

@@ -1,0 +1,34 @@
+{
+	"type": "modal",
+	"callback_id": "create_freetext_view",
+	"title": {
+		"type": "plain_text",
+		"text": "アンケート(自由入力)の作成",
+		"emoji": true
+	},
+	"submit": {
+		"type": "plain_text",
+		"text": "作成する",
+		"emoji": true
+	},
+	"close": {
+		"type": "plain_text",
+		"text": "閉じる",
+		"emoji": true
+	},
+	"blocks": [
+		{
+			"type": "input",
+			"block_id": "question",
+			"element": {
+				"type": "plain_text_input",
+				"action_id": "question-action"
+			},
+			"label": {
+				"type": "plain_text",
+				"text": "質問したいことを入力してください",
+				"emoji": true
+			}
+		}
+	]
+}
